@@ -55,7 +55,7 @@ jps.Fishing = false
 jps.Macro = "jpsMacro"
 jps.HealerBlacklist = {}
 jps.BlacklistTimer = 2
-jps.BlankCheque = false
+jps.Silent = false
 
 -- Config.
 jps.Configged = false
@@ -100,7 +100,7 @@ combatFrame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 
 
 function write(...)
-	if jps.BlankCheque then return end
+	if jps.Silent then return end
 	DEFAULT_CHAT_FRAME:AddMessage("|cffff8000JPS: " .. strjoin(" ", tostringall(...)));
 end
 
@@ -229,9 +229,9 @@ function SlashCmdList.jps(cmd, editbox)
 		jps.gui_toggleEnabled(true)
 	elseif msg == "respec" then
 		jps.detectSpec()
-	elseif msg == "suppress" then
-		write("Printing output now set to ",not jps.BlankCheck)
-		jps.BlankCheck = not jps.BlankCheck
+	elseif msg == "silent" then
+		write("Silent mode now set to ", not jps.Silent)
+		jps.Silent = not jps.Silent
 	elseif msg == "fishing" then
 		jps.Fishing = not jps.Fishing
 		write("Murglesnout & Grey Deletion now", tostring(jps.Fishing))
@@ -273,6 +273,7 @@ function SlashCmdList.jps(cmd, editbox)
 		write("/jps pew - Spammable macro to do your best moves, if for some reason you don't want it fully automated")
 		write("/jps interrupts - Toggle interrupting")
 		write("/jps help - Show this help text.")
+		write("/jps silent - Don't show any output.")
 	elseif msg == "pew" then
 		combat()
 	elseif msg == nil then
