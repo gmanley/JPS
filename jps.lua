@@ -18,8 +18,8 @@
 -- Huge thanks to everyone who's helped out on this, <3
 -- Universal
 jps = {}
-jps.Version = "1.1.0"
-jps.Revision = "r290"
+jps.Version = "1.2.0"
+jps.Revision = "r340"
 jps.RaidStatus = {}
 jps.UpdateInterval = 0.05
 jps.Combat = false
@@ -62,18 +62,6 @@ jps.Configged = false
 jps_variablesLoaded = false
 jpsName = UnitName("player")
 jpsRealm = GetCVar("realmName")
-jps_saveVars = {
-	{ "Enabled", true },
-	{ "MoveToTarget", false },
-	{ "FaceTarget", true },
-	{ "Interrupts", true },
-	{ "UseCDs", false },
-	{ "PvP", false },
-	{ "MultiTarget", false },
-	{ "ExtraButtons", true },
-	{ "ButtonGrowthDir", "right" },
-	{ "IconSize", 36 },
-}
 
 -- Slash Cmd
 SLASH_jps1 = '/jps'
@@ -158,9 +146,9 @@ function combatEventHandler(self, event, ...)
 			if jps.Spec == "Assassination" then jps.Cast("mutilate")
 			elseif jps.Spec == "Subtlety" then jps.Cast("hemorrhage") end
 		elseif (jps.FaceTarget or jps.MoveToTarget) and (jps.Error == "You are facing the wrong way!" or jps.Error == "Target needs to be in front of you.") then
-			InteractUnit("target")
+			jps.faceTarget()
 		elseif (jps.Error == "Out of range." or jps.Error == "You are too far away!") and jps.MoveToTarget then
-			InteractUnit("target")
+			jps.moveToTarget()
 		end
 
 	-- RaidStatus Update
@@ -232,6 +220,10 @@ function SlashCmdList.jps(cmd, editbox)
 	elseif msg == "silent" then
 		write("Silent mode now set to ", not jps.Silent)
 		jps.Silent = not jps.Silent
+	elseif msg == "hide" then
+		jpsIcon:Hide()
+	elseif msg == "show" then
+		jpsIcon:Show()
 	elseif msg == "fishing" then
 		jps.Fishing = not jps.Fishing
 		write("Murglesnout & Grey Deletion now", tostring(jps.Fishing))
@@ -276,10 +268,8 @@ function SlashCmdList.jps(cmd, editbox)
 		write("/jps silent - Don't show any output.")
 	elseif msg == "pew" then
 		combat()
-	elseif msg == nil then
-		InterfaceOptionsFrame_OpenToCategory(jpsConfigFrame)
 	else
-		write("Command not recognised :( type /jps help for more info!")
+		InterfaceOptionsFrame_OpenToCategory(jpsConfigFrame)
 	end
 end
 
